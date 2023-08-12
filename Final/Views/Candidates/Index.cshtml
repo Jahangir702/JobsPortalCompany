@@ -1,0 +1,159 @@
+﻿@model IEnumerable<Final.Models.Candidate>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Common
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-center">Candidates List</h3>
+
+        <div class="d-flex justify-content-end mb-1">
+            <a href="@Url.Action("Create", "Candidates")" class="btn btn-primary btn-sm">Create New</a>
+        </div>
+
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="table-success">
+                <tr>
+                    <th></th>
+                    <th>Image</th>
+                    <th>CandidateName</th>
+                    <th>BirthDate</th>
+                    <th>AppliedFor</th>
+                    <th>ExpectedSalary</th>
+                    <th>Conditions?</th>
+                    <th>...</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr style="vertical-align:middle" id="tr_@t.CandidateId">
+                        <td class="text-center">
+                            <button type="button" id="show_@t.CandidateId" class="btn btn-link btn-sm show" data-aid="@t.CandidateId"><i class="bi bi-plus-square"></i></button>
+                            <button type="button" id="hide_@t.CandidateId" class="btn btn-link btn-sm hide" data-aid="@t.CandidateId" style="display:none"><i class="bi bi-dash-square"></i></button>
+                        </td>
+                        <td class="text-center"><img src="~/Pictures/@t.Picture" class="img-thumbnail rounded" style="width:70px" /></td>
+                        <td>@t.CandidateName</td>
+                        <td>@t.BirthDate.ToString("yyyy-MM-dd")</td>
+                        <td>@t.AppliedFor</td>
+                        <td>@t.ExpectedSalary</td>
+                        <td>@(t.Conditions ? "Yes" : "No")</td>
+                        <td>
+                            <a title="Edit this item" href="@Url.Action("Edit", "Candidates", new {id=t.CandidateId})" class="btn btn-success btn-sm"><i class="bi bi-pencil"></i></a>
+                            <button type="button" title="Delete this item" data-pk="@t.CandidateId" href="@Url.Action("Delete", "Candidates", new {id=t.CandidateId})" class="btn btn-danger btn-sm del"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr style="display:none" id="p_@t.CandidateId">
+                        <td></td>
+                        <td colspan="8">
+                            <h4>Qualifications</h4>
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Degree</th>
+                                        <th>PassingYear</th>
+                                        <th>Institute</th>
+                                        <th>Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var p in t.Qualifications)
+                                    {
+                                        <tr>
+                                            <td>@p.Degree</td>
+                                            <td>@p.PassingYear</td>
+                                            <td>@p.Institute</td>
+                                            <td>@p.Result</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end">
+            @Html.PagedListPager((IPagedList)Model, pg => Url.Action("Index", new { pg = pg }), new PagedListRenderOptions
+            {
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" }
+            })
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" id="delmodal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Delete Candidates</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure to Delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnyes">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section styles
+{
+    <link href="~/Content/bootstrap-icons-1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+}
+@section scripts
+{
+    <script src="~/Scripts/jquery-3.7.0.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+    <script>
+        $(() => {
+            $(".show").click(function () {
+                var aid = $(this).data("aid");
+                $(`#p_${aid}`).show();
+                $(`#hide_${aid}`).show();
+                $(this).hide();
+            });
+            $(".hide").click(function () {
+                var aid = $(this).data("aid");
+                $(`#p_${aid}`).hide();
+                $(`#show_${aid}`).show();
+                $(this).hide();
+            })
+        });
+    </script>
+
+    <script>
+        var delModal;
+        var delId = -1;
+        $(() => {
+            delModal = new bootstrap.Modal(document.getElementById('delmodal'));
+            $(".del").click(function () {
+                delModal.show();
+                delId = $(this).data("pk");
+                console.log(delId);
+            });
+            $("#btnyes").click(() => {
+                $.ajax({
+                    type: "post",
+                    url: "/Candidates/Delete/" + delId,
+                    dataType: "json",
+                    success: (r) => {
+                        if (r.success == true) {
+                            $("#tr_" + delId).remove();
+                            $("#tr_p" + delId).remove();
+                        }
+                    }
+                });
+                delModal.hide();
+            });
+        })
+    </script>
+}
+

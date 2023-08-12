@@ -1,0 +1,49 @@
+﻿@model Final.ViewModels.Identity.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <h3 style="text-align: center; text-decoration: underline; font-weight: bold; color: darkslategrey;">Login Our Portal</h3>
+                @using (Html.BeginForm())
+                {
+                    @Html.ValidationSummary()
+                    <div class="form-group row mb-1">
+                        @Html.LabelFor(x => x.Username, new { @class = "col-form-label col-2 text-end", style = "text-align: center;" })
+                        <div class="col-4">
+                            @Html.TextBoxFor(x => x.Username, new { @class = "form-control", style = "text-align: center;" })
+                            @Html.ValidationMessageFor(x => x.Username, "", new { @class = "text-danger", style = "text-align: center;" })
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        @Html.LabelFor(x => x.Password, new { @class = "col-form-label col-2 text-end", style = "text-align: center;" })
+                        <div class="col-4">
+                            @Html.PasswordFor(x => x.Password, new { @class = "form-control", style = "text-align: center;" })
+                            @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger", style = "text-align: center;" })
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+
+                        <div class="col-6 offset-4">
+                            @Html.ActionLink("Register here", "Register", "Account", null, new { @class = "my-link-style btn btn-success", style = "color: White; font-weight: bold;" })
+                            <button type="submit" class="btn btn-primary" , style="color: White; font-weight: bold;">Login</button>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-10">
+                        <div class="col-6 offset-2 justify-content-center">
+                            <img src="~/Pictures/login-icon-3060.png">
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

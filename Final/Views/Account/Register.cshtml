@@ -1,0 +1,64 @@
+﻿@model Final.ViewModels.Identity.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+  
+</head>
+<body>
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <h3 style="text-align: center; text-decoration: underline; font-weight: bold; color: darkslategrey;">Register Our Portal</h3>
+                @using (Html.BeginForm())
+                {
+                    @Html.ValidationSummary(false)
+                    <div class="form-group row mb-1">
+                        @Html.LabelFor(x => x.Username, new { @class = "col-form-label col-2 text-end" })
+                        <div class="col-4">
+                            @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Username, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        @Html.LabelFor(x => x.Password, new { @class = "col-form-label col-2 text-end" })
+                        <div class="col-4">
+                            @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        @Html.LabelFor(x => x.ConfirmPassword, new { @class = "col-form-label col-2 text-end" })
+                        <div class="col-4">
+                            @Html.TextBoxFor(x => x.ConfirmPassword, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+
+                        <div class="col-6 offset-4">
+                            @Html.ActionLink("Login here", "Login", "Account", null, new { @class = "my-link-style btn btn-success", style = "color: White; font-weight: bold;" })
+                            <button type="submit" class="btn btn-primary" , style="color: White; font-weight: bold;">Register</button>
+                        </div>
+                    </div>
+                       
+                    <div class="form-group row mb-1">
+                        <div class="col-6 offset-2 justify-content-center">
+                            <a href="http://localhost:54299/Account/Register"><img src="~/Pictures/pngegg.png"></a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@section scripts {
+    <script src="~/Scripts/jquery-3.6.3.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+}
+
